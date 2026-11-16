@@ -102,8 +102,10 @@ def run_agent(config, prompt, workdir, meta_dir):
     stdin_text = None if uses_prompt else prompt
     started = time.time()
     timed_out = False
+    env = os.environ.copy()
+    env["PWD"] = workdir
     try:
-        proc = subprocess.run(command, cwd=workdir, input=stdin_text, stdin=None if stdin_text is not None else subprocess.DEVNULL, capture_output=True, text=True, timeout=config["timeout"])
+        proc = subprocess.run(command, cwd=workdir, env=env, input=stdin_text, stdin=None if stdin_text is not None else subprocess.DEVNULL, capture_output=True, text=True, timeout=config["timeout"])
         stdout, stderr, code = proc.stdout, proc.stderr, proc.returncode
     except subprocess.TimeoutExpired as exc:
         stdout = as_text(exc.stdout)

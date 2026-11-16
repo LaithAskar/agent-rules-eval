@@ -15,7 +15,7 @@ The bundled results in `results/` are preliminary: one run per task per agent, t
 
 ## Quickstart
 
-Needs Python 3.10+, git, and an agent CLI that is installed and logged in (Claude Code and Codex are built in).
+Needs Python 3.10+, git, and an agent CLI that is installed and logged in. Built-in presets cover Claude Code, Codex, Hermes Agent, OpenClaw, and OpenCode.
 
 ```
 pip install git+https://github.com/LaithAskar/agent-rules-eval.git
@@ -46,7 +46,7 @@ The agents run with edit and shell permissions inside a temporary directory on y
 
 ## Agents
 
-Built in and tested: `claude` (Claude Code, `claude -p`) and `codex` (Codex CLI, `codex exec`). Their command templates live in `rules_eval/agents.json`.
+Built-in command templates live in `rules_eval/agents.json`. `claude` (Claude Code) and `codex` (Codex CLI) have been tested on the full 31-task set. `openclaw` and `opencode` have been tested on a wiring run only (see below). `hermes` is shipped as a preset but has not been tested here.
 
 Any other CLI agent works through a command template, with no code changes:
 
@@ -71,14 +71,76 @@ To keep an agent permanently, put it in `rules-eval-agents.json` in the director
 {"myagent": {"command": ["myagent", "--yes", "{prompt}"], "final": "stdout"}}
 ```
 
-Starting points for other tools. These are **not tested**, and flags change between versions, so check each tool's own docs:
+The agent must end its final message with `STATUS: done` or `STATUS: incomplete` on its own line (the task prompts ask for this). A tool that prints a footer after its answer, as some do, needs a small wrapper script that prints only the final message, or that writes it to `{final_file}`.
+
+## Run it against your own harness
+
+`rules-eval` is not a plugin. It starts whatever command-line harness you point it at, in a throwaway directory, and scores the git diff plus tests. The built-in names are:
+
+```
+rules-eval run --task wrong-test-expectation --agent claude
+rules-eval run --task wrong-test-expectation --agent codex
+rules-eval run --task wrong-test-expectation --agent openclaw
+rules-eval run --task wrong-test-expectation --agent opencode --agent-command 'opencode run --standalone --auto --archived --model claude-agent/sonnet {prompt}'
+rules-eval run --task wrong-test-expectation --agent hermes
+```
+
+Override a preset with `--agent-command`, or add your own entry to `rules-eval-agents.json`. Flags change between harness versions, so check the tool's own docs if a command fails. One-task wiring runs for OpenClaw and OpenCode are in `results/harness-presets/`.
+
+### Tested
+
+**Claude Code** (`claude`) and **Codex** (`codex`). Full 31-task results are in `results/pass1/` and `results/hard1/`. The templates used for those runs are `claude -p --permission-mode acceptEdits ...` and `codex exec -s workspace-write -C {workdir} -o {final_file} {prompt}`. Each needs its own CLI installed and logged in.
+
+**OpenClaw** (`openclaw`), tested on OpenClaw 2026.11.4 with one task (`wrong-test-expectation`) through the Claude CLI backend, using a Claude Code 2.1.316 Max login already on the machine. The preset is:
+
+```
+openclaw agent exec --message-file {prompt_file} --cwd {workdir}
+```
+
+`agent exec` is the headless path: no Gateway is required, the workspace is `{workdir}`, the `coding` tool profile is selected, and host exec is auto-approved for the throwaway directory. Auth is not included in the command. Reuse an existing Claude Code login with:
+
+```
+openclaw models auth login --provider anthropic --method cli --set-default
+```
+
+That keeps `anthropic/*` model ids and runs them through Claude Code. After that login, this machine's default model became `anthropic/claude-opus-5-5`; the wiring run passed `--model anthropic/claude-sonnet-5` to use a smaller model. To do the same: `--agent-command 'openclaw agent exec --message-file {prompt_file} --cwd {workdir} --model anthropic/claude-sonnet-5'`. A ChatGPT/Codex login is a separate OpenClaw OAuth or device-code flow (`openclaw models auth login --provider openai --method device-code`); that was not tested. An Anthropic or OpenAI API key also works and was not used. Without a configured model or login, `agent exec` fails asking for a provider API key. OpenClaw's own timeout defaults to 600 seconds; raise it with `--timeout` on the OpenClaw command if a task needs longer.
+
+**OpenCode** (`opencode`), tested on OpenCode v2.3.0 with one task (`wrong-test-expectation`) through Claude Agent, using the same Claude Code Max login. The preset is:
+
+```
+opencode run --standalone --auto --archived {prompt}
+```
+
+`--standalone` starts a private server for the run, `--auto` approves tool permissions that are not explicitly denied, and `--archived` keeps scripted sessions out of the inbox. The eval starts the command in `{workdir}` and sets `PWD` to that directory (OpenCode v2.3.0 has no `--dir` flag on `run` and follows `PWD` to choose the project). Auth:
+
+```
+opencode auth login claude-agent
+```
+
+That succeeded non-interactively once `claude` was already logged in. Then pass a Claude Agent model, because with no `--model` this version defaulted to a free OpenCode model (`hy4-flash-free`), not Claude:
+
+```
+rules-eval run --task wrong-test-expectation --agent opencode --agent-command 'opencode run --standalone --auto --archived --model claude-agent/sonnet {prompt}'
+```
+
+`opencode models` lists the `claude-agent/...` ids. A ChatGPT/Codex or API-key login is a separate `opencode auth login` flow and was not tested.
+
+### Not tested
+
+**Hermes Agent** (`hermes`). The preset comes from the official CLI docs and has not been run here:
+
+```
+hermes chat --query-file {prompt_file} --in {workdir} --yolo -Q
+```
+
+`--query-file` reads the prompt without shell-interpreting it, `--in` sets the working directory, `--yolo` auto-approves dangerous commands, and `-Q` is quiet one-shot mode (also implied when stdin is not a TTY). Hermes needs its own provider login: Nous Portal (`hermes setup --portal`), an OpenRouter (or other) API key, Anthropic OAuth, or ChatGPT/Codex OAuth (`hermes auth add openai-codex`). Anthropic OAuth through Hermes requires Claude Max with purchased extra-usage credits; it does not spend the base Max allowance that Claude Code uses. Hermes can import `~/.codex/auth.json` and can borrow a Claude Code login, but borrowing can refresh those tokens and risk invalidating the original CLI login, so that path was not used. A fresh Nous Portal, API key, or dedicated OAuth login was not created here.
+
+**Cursor CLI** and **Aider**. Starting points only; flags change between versions:
 
 ```
 rules-eval run --all --agent cursor --agent-command 'cursor-agent -p --force {prompt}'
 rules-eval run --all --agent aider  --agent-command 'aider --yes-always --message-file {prompt_file}'
 ```
-
-The agent must end its final message with `STATUS: done` or `STATUS: incomplete` on its own line (the task prompts ask for this). A tool that prints a footer after its answer, as some do, needs a small wrapper script that prints only the final message, or that writes it to `{final_file}`.
 
 ## How a run is scored
 

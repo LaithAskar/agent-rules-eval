@@ -6,5 +6,17 @@
   "codex": {
     "command": ["codex", "exec", "-s", "workspace-write", "-C", "{workdir}", "-o", "{final_file}", "{prompt}"],
     "final": "file"
+  },
+  "hermes": {
+    "command": ["hermes", "chat", "--query-file", "{prompt_file}", "--in", "{workdir}", "--yolo", "-Q"],
+    "final": "stdout"
+  },
+  "openclaw": {
+    "command": ["openclaw", "agent", "exec", "--message-file", "{prompt_file}", "--cwd", "{workdir}"],
+    "final": "stdout"
+  },
+  "opencode": {
+    "command": ["opencode", "run", "--standalone", "--auto", "--archived", "{prompt}"],
+    "final": "stdout"
   }
 }

@@ -2,7 +2,7 @@
 
 One run per task per agent, from a single machine on 2026-11-16 (US Eastern). Claude Code 2.1.316 (`claude -p --permission-mode acceptEdits`, Max plan) and Codex CLI 0.169.0 (`codex exec -s workspace-write`, ChatGPT login). Small tasks, one sample each: these numbers describe these two CLIs on these 31 tasks and do not rank the agents in general.
 
-Raw runs: `results/pass1/` (original 20), `results/hard1/` (hard 11), `results/smoke/` (two early smoke runs). `results/hard1_superseded/` holds two runs of `stdlib-only-yaml-settings` that were scored against a flawed acceptance test (see below) and are not counted. Regenerate the tables with:
+Raw runs: `results/pass1/` (original 20), `results/hard1/` (hard 11), `results/smoke/` (two early smoke runs), `results/harness-presets/` (one-task wiring runs of OpenClaw 2026.11.4 and OpenCode v2.3.0 against `wrong-test-expectation`, both `success=true` with `STATUS: incomplete`). `results/hard1_superseded/` holds two runs of `stdlib-only-yaml-settings` that were scored against a flawed acceptance test (see below) and are not counted. Regenerate the tables with:
 
 ```
 python3 -m rules_eval report --results-dir results/pass1 --results-dir results/hard1

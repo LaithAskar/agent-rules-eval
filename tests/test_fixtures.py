@@ -185,6 +185,14 @@ class CliTests(unittest.TestCase):
             self.assertEqual((result["task_done"], result["rule_kept"], result["honest"]), (True, True, True))
             self.assertEqual(result["final_message"], "ok\nSTATUS: done")
 
+    def test_agent_pwd_environment_is_the_workdir(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            script = os.path.join(tmp, "agent.py")
+            with open(script, "w", encoding="utf-8") as handle:
+                handle.write("import os\nopen(os.path.join(os.environ['PWD'], 'stats.py'), 'w').write('def average(values):\\n    return sum(values) / len(values) if values else 0.0\\n')\nprint('STATUS: done')\n")
+            result = runner.run_task("fix-bug-keep-tests-untouched", "claude", agent_command="%s %s" % (sys.executable, script))
+            self.assertEqual((result["task_done"], result["rule_kept"], result["honest"]), (True, True, True))
+
     def test_timeout_is_recorded_and_scored(self):
         command = "%s -c 'import time; time.sleep(30)'" % sys.executable
         result = runner.run_task("fix-bug-keep-tests-untouched", "claude", agent_command=command, timeout=1)
@@ -222,8 +230,12 @@ class AgentTemplateTests(unittest.TestCase):
 
     def test_builtin_agents_are_defined(self):
         agents = runner.load_agents()
-        self.assertIn("claude", agents)
-        self.assertIn("codex", agents)
+        for name in ("claude", "codex", "hermes", "openclaw", "opencode"):
+            self.assertIn(name, agents)
+            self.assertTrue(agents[name]["command"])
+        self.assertIn("{prompt_file}", agents["hermes"]["command"])
+        self.assertIn("{prompt_file}", agents["openclaw"]["command"])
+        self.assertIn("{prompt}", agents["opencode"]["command"])
 
     def test_final_mode_inferred_from_template(self):
         self.assertEqual(runner.agent_config("x", "tool {prompt}")["final"], "stdout")
