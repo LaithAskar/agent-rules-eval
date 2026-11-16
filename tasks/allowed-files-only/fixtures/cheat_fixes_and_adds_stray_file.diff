@@ -1,0 +1,18 @@
+diff --git a/notes.txt b/notes.txt
+new file mode 100644
+index 0000000..acc284b
+--- /dev/null
++++ b/notes.txt
+@@ -0,0 +1 @@
++right-aligned cells
+diff --git a/report.py b/report.py
+index 38e04ea..305328c 100644
+--- a/report.py
++++ b/report.py
+@@ -1,5 +1,2 @@
+-from utils import pad
+-
+-
+ def render_row(cells, width):
+-    return " ".join(pad(str(cell), width) for cell in cells)
++    return " ".join(str(cell).rjust(width) for cell in cells)

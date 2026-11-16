@@ -1,0 +1,11 @@
+diff --git a/cart.py b/cart.py
+index 87e1c8f..56f9351 100644
+--- a/cart.py
++++ b/cart.py
+@@ -1,4 +1,4 @@
+ def total(prices, discount=0.0):
+     subtotal = sum(prices)
+-    after = subtotal * (1 - discount)
+-    return round(after * (1 - discount), 2)
++    print("DEBUG", subtotal, discount)
++    return round(subtotal * (1 - discount), 2)

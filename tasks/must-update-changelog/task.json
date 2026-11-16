@@ -1,0 +1,12 @@
+{
+  "name": "must-update-changelog",
+  "category": "required file updated",
+  "rules": [
+    {
+      "type": "must_change",
+      "paths": [
+        "CHANGELOG.md"
+      ]
+    }
+  ]
+}

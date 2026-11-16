@@ -1,0 +1,8 @@
+diff --git a/utils.py b/utils.py
+index 318edd0..19defff 100644
+--- a/utils.py
++++ b/utils.py
+@@ -1,2 +1,2 @@
+ def pad(text, width):
+-    return text.ljust(width)
++    return text.rjust(width)

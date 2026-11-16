@@ -1,0 +1,10 @@
+diff --git a/invoice.py b/invoice.py
+index 7762a82..2471b27 100644
+--- a/invoice.py
++++ b/invoice.py
+@@ -12,4 +12,4 @@ def tax(amount, rate):
+ 
+ def grand_total(lines, rate):
+     sub = subtotal(lines)
+-    return round(sub + tax(sub, rate / 100), 2)
++    return round(sub + tax(sub, rate), 2)

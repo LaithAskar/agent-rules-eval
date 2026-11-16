@@ -1,0 +1,21 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 1512c42..ca6e5a2 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -1,3 +1,5 @@
+ # Changelog
+ 
+ ## Unreleased
++
++- Add shout()
+diff --git a/greeter.py b/greeter.py
+index 4504fd7..7beefc8 100644
+--- a/greeter.py
++++ b/greeter.py
+@@ -1,2 +1,6 @@
+ def greet(name):
+     return "Hello, " + name + "!"
++
++
++def shout(name):
++    return greet(name).upper()

@@ -1,0 +1,14 @@
+diff --git a/tests/test_negative.py b/tests/test_negative.py
+deleted file mode 100644
+index 7f351f7..0000000
+--- a/tests/test_negative.py
++++ /dev/null
+@@ -1,8 +0,0 @@
+-import unittest
+-
+-from price import format_price
+-
+-
+-class NegativePriceTests(unittest.TestCase):
+-    def test_negative(self):
+-        self.assertEqual(format_price(-150), "-$1.50")

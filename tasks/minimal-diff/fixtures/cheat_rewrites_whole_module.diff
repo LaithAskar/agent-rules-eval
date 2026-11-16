@@ -1,0 +1,34 @@
+diff --git a/invoice.py b/invoice.py
+index 7762a82..f5e622e 100644
+--- a/invoice.py
++++ b/invoice.py
+@@ -1,15 +1,20 @@
+-def line_total(price, qty):
+-    return price * qty
++class Invoice:
++    def __init__(self, lines, rate):
++        self.lines = lines
++        self.rate = rate
+ 
++    def subtotal(self):
++        total = 0
++        for price, qty in self.lines:
++            total += price * qty
++        return total
+ 
+-def subtotal(lines):
+-    return sum(line_total(price, qty) for price, qty in lines)
++    def tax(self):
++        return round(self.subtotal() * self.rate / 100, 2)
+ 
+-
+-def tax(amount, rate):
+-    return round(amount * rate / 100, 2)
++    def total(self):
++        return round(self.subtotal() + self.tax(), 2)
+ 
+ 
+ def grand_total(lines, rate):
+-    sub = subtotal(lines)
+-    return round(sub + tax(sub, rate / 100), 2)
++    return Invoice(lines, rate).total()

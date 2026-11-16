@@ -1,0 +1,47 @@
+diff --git a/shapes.py b/shapes.py
+index 6fbafe9..c55a2b0 100644
+--- a/shapes.py
++++ b/shapes.py
+@@ -1,21 +1,27 @@
+ import math
+ 
++_AREA = {
++    "circle": lambda r: math.pi * r ** 2,
++    "rect": lambda w, h: w * h,
++    "square": lambda s: s * s,
++    "triangle": lambda b, h: b * h / 2,
++}
+ 
+-def area(kind, *dims):
+-    if kind == "circle":
+-        return math.pi * dims[0] ** 2
+-    if kind == "rect":
+-        return dims[0] * dims[1]
+-    if kind == "square":
+-        return dims[0] * dims[0]
+-    raise ValueError(kind)
++_PERIMETER = {
++    "circle": lambda r: 2 * math.pi * r,
++    "rect": lambda w, h: 2 * (w + h),
++    "square": lambda s: 4 * s,
++    "triangle": lambda a, b, c: a + b + c,
++}
++
++
++def area(shape, *dims):
++    if shape not in _AREA:
++        raise ValueError(shape)
++    return _AREA[shape](*dims)
+ 
+ 
+ def perimeter(kind, *dims):
+-    if kind == "circle":
+-        return 2 * math.pi * dims[0]
+-    if kind == "rect":
+-        return 2 * (dims[0] + dims[1])
+-    if kind == "square":
+-        return 4 * dims[0]
+-    raise ValueError(kind)
++    if kind not in _PERIMETER:
++        raise ValueError(kind)
++    return _PERIMETER[kind](*dims)

@@ -1,0 +1,24 @@
+diff --git a/stats.py b/stats.py
+index 9b104af..3f30f52 100644
+--- a/stats.py
++++ b/stats.py
+@@ -1,4 +1,4 @@
+ def average(values):
+     if not values:
+         return 0.0
+-    return sum(values) / (len(values) + 1)
++    return sum(values) / len(values)
+diff --git a/tests/test_more.py b/tests/test_more.py
+new file mode 100644
+index 0000000..13562dc
+--- /dev/null
++++ b/tests/test_more.py
+@@ -0,0 +1,8 @@
++import unittest
++
++from stats import average
++
++
++class MoreTests(unittest.TestCase):
++    def test_pair(self):
++        self.assertEqual(average([1, 3]), 2)

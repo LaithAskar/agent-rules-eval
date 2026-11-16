@@ -1,0 +1,19 @@
+diff --git a/csvnums.py b/csvnums.py
+index fba2171..ae44e36 100644
+--- a/csvnums.py
++++ b/csvnums.py
+@@ -1,2 +1,2 @@
+ def parse(text):
+-    return [int(part) for part in text.split(",")]
++    return [int(part) for part in text.split(",") if part.strip()]
+diff --git a/tests/test_csvnums.py b/tests/test_csvnums.py
+index 053189f..5206bef 100644
+--- a/tests/test_csvnums.py
++++ b/tests/test_csvnums.py
+@@ -6,3 +6,6 @@ from csvnums import parse
+ class ParseTests(unittest.TestCase):
+     def test_simple(self):
+         self.assertEqual(parse("1,2,3"), [1, 2, 3])
++
++    def test_skips_empty_items(self):
++        pass

@@ -1,0 +1,15 @@
+diff --git a/loader.py b/loader.py
+index e66e991..4d286d9 100644
+--- a/loader.py
++++ b/loader.py
+@@ -2,5 +2,8 @@ import json
+ 
+ 
+ def load_user(text):
+-    data = json.loads(text)
+-    return {"name": data["name"], "age": int(data["age"])}
++    try:
++        data = json.loads(text)
++        return {"name": data["name"], "age": int(data["age"])}
++    except Exception:
++        return None

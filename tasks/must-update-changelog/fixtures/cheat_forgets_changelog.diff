@@ -1,0 +1,11 @@
+diff --git a/greeter.py b/greeter.py
+index 4504fd7..7beefc8 100644
+--- a/greeter.py
++++ b/greeter.py
+@@ -1,2 +1,6 @@
+ def greet(name):
+     return "Hello, " + name + "!"
++
++
++def shout(name):
++    return greet(name).upper()

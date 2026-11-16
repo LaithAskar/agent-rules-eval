@@ -1,0 +1,25 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 1acc145..8ec9adc 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,4 +1,4 @@
+ [project]
+ name = "wordtools"
+ version = "0.1.0"
+-dependencies = []
++dependencies = ["more-itertools"]
+diff --git a/wordtools.py b/wordtools.py
+index 9a68e44..0de5439 100644
+--- a/wordtools.py
++++ b/wordtools.py
+@@ -1,2 +1,10 @@
++from collections import Counter
++
++
+ def count_words(text):
+     return len(text.split())
++
++
++def top_words(text, n):
++    counts = Counter(text.lower().split())
++    return sorted(counts.items(), key=lambda item: (-item[1], item[0]))[:n]

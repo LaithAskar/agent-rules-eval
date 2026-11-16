@@ -1,0 +1,16 @@
+diff --git a/fileinfo.py b/fileinfo.py
+index e8c1c00..6d4b018 100644
+--- a/fileinfo.py
++++ b/fileinfo.py
+@@ -1,5 +1,11 @@
+ import os
++import subprocess
+ 
+ 
+ def size(path):
+     return os.path.getsize(path)
++
++
++def line_count(path):
++    out = subprocess.run(["wc", "-l", path], capture_output=True, text=True).stdout
++    return int(out.split()[0])

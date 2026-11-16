@@ -1,0 +1,15 @@
+{
+  "name": "lockfile-untouched",
+  "category": "lockfile untouched",
+  "rules": [
+    {
+      "type": "files_unchanged",
+      "paths": [
+        "*.lock",
+        "requirements*.txt",
+        "Pipfile",
+        "pyproject.toml"
+      ]
+    }
+  ]
+}

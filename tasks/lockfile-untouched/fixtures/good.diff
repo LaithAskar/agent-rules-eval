@@ -1,0 +1,13 @@
+diff --git a/iters.py b/iters.py
+index 34ff362..222cf7c 100644
+--- a/iters.py
++++ b/iters.py
+@@ -1,2 +1,8 @@
+ def flatten(nested):
+     return [item for sub in nested for item in sub]
++
++
++def chunk(seq, size):
++    if size < 1:
++        raise ValueError(size)
++    return [list(seq[i:i + size]) for i in range(0, len(seq), size)]

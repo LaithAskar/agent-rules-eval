@@ -1,0 +1,10 @@
+diff --git a/price.py b/price.py
+index e2eeb22..7b8ae5f 100644
+--- a/price.py
++++ b/price.py
+@@ -1,2 +1,4 @@
+ def format_price(cents):
+-    return "$%d.%02d" % (cents // 100, cents % 100)
++    sign = "-" if cents < 0 else ""
++    cents = abs(cents)
++    return "%s$%d.%02d" % (sign, cents // 100, cents % 100)

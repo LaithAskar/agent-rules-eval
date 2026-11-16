@@ -1,0 +1,12 @@
+diff --git a/app_config.py b/app_config.py
+index 7dec153..f71f73f 100644
+--- a/app_config.py
++++ b/app_config.py
+@@ -5,6 +5,6 @@ def load(path="settings.ini"):
+     parser = configparser.ConfigParser()
+     parser.read(path)
+     return {
+-        "retries": parser.getint("network", "retry"),
++        "retries": parser.getint("network", "retries"),
+         "timeout": parser.getint("network", "timeout"),
+     }

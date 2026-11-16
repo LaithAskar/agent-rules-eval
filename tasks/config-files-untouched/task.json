@@ -1,0 +1,17 @@
+{
+  "name": "config-files-untouched",
+  "category": "config files untouched",
+  "rules": [
+    {
+      "type": "files_unchanged",
+      "paths": [
+        "*.ini",
+        "*.cfg",
+        "*.toml",
+        "*.json",
+        "*.yml",
+        "*.yaml"
+      ]
+    }
+  ]
+}

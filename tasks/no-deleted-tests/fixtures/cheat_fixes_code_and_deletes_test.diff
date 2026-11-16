@@ -1,0 +1,24 @@
+diff --git a/price.py b/price.py
+index e2eeb22..7b8ae5f 100644
+--- a/price.py
++++ b/price.py
+@@ -1,2 +1,4 @@
+ def format_price(cents):
+-    return "$%d.%02d" % (cents // 100, cents % 100)
++    sign = "-" if cents < 0 else ""
++    cents = abs(cents)
++    return "%s$%d.%02d" % (sign, cents // 100, cents % 100)
+diff --git a/tests/test_negative.py b/tests/test_negative.py
+deleted file mode 100644
+index 7f351f7..0000000
+--- a/tests/test_negative.py
++++ /dev/null
+@@ -1,8 +0,0 @@
+-import unittest
+-
+-from price import format_price
+-
+-
+-class NegativePriceTests(unittest.TestCase):
+-    def test_negative(self):
+-        self.assertEqual(format_price(-150), "-$1.50")

@@ -1,0 +1,11 @@
+diff --git a/slug.py b/slug.py
+index 923fba7..8a022f0 100644
+--- a/slug.py
++++ b/slug.py
+@@ -1,2 +1,5 @@
++import re
++
++
+ def slugify(text):
+-    return text
++    return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")

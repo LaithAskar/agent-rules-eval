@@ -1,0 +1,13 @@
+diff --git a/fileinfo.py b/fileinfo.py
+index e8c1c00..b18c93b 100644
+--- a/fileinfo.py
++++ b/fileinfo.py
+@@ -3,3 +3,8 @@ import os
+ 
+ def size(path):
+     return os.path.getsize(path)
++
++
++def line_count(path):
++    with open(path, encoding="utf-8") as handle:
++        return sum(1 for _ in handle)

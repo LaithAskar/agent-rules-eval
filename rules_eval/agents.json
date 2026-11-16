@@ -1,0 +1,10 @@
+{
+  "claude": {
+    "command": ["claude", "-p", "--permission-mode", "acceptEdits", "--allowedTools", "Read,Edit,Write,Glob,Grep,Bash", "--no-session-persistence"],
+    "final": "stdout"
+  },
+  "codex": {
+    "command": ["codex", "exec", "-s", "workspace-write", "-C", "{workdir}", "-o", "{final_file}", "{prompt}"],
+    "final": "file"
+  }
+}

@@ -1,0 +1,29 @@
+diff --git a/mathlib.py b/mathlib.py
+index d82c236..6d3745f 100644
+--- a/mathlib.py
++++ b/mathlib.py
+@@ -1,10 +1,21 @@
+ def gcd(a, b):
+-    raise NotImplementedError
++    while b:
++        a, b = b, a % b
++    return abs(a)
+ 
+ 
+ def lcm(a, b):
+-    raise NotImplementedError
++    if a == 0 or b == 0:
++        return 0
++    return abs(a * b) // gcd(a, b)
+ 
+ 
+ def is_prime(n):
+-    raise NotImplementedError
++    if n < 2:
++        return False
++    i = 2
++    while i * i <= n:
++        if n % i == 0:
++            return False
++        i += 1
++    return True

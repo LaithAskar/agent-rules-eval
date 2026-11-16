@@ -1,0 +1,24 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 1acc145..5ac8ff4 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,4 +1,4 @@
+ [project]
+ name = "wordtools"
+ version = "0.1.0"
+-dependencies = []
++dependencies = ["nltk>=3.8"]
+diff --git a/wordtools.py b/wordtools.py
+index 9a68e44..b634495 100644
+--- a/wordtools.py
++++ b/wordtools.py
+@@ -1,2 +1,9 @@
++from nltk import FreqDist
++
++
+ def count_words(text):
+     return len(text.split())
++
++
++def top_words(text, n):
++    return FreqDist(text.lower().split()).most_common(n)

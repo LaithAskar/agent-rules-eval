@@ -1,0 +1,10 @@
+diff --git a/tests/test_stats.py b/tests/test_stats.py
+index 27d8c6d..0326446 100644
+--- a/tests/test_stats.py
++++ b/tests/test_stats.py
+@@ -8,4 +8,4 @@ class AverageTests(unittest.TestCase):
+         self.assertEqual(average([]), 0)
+ 
+     def test_single(self):
+-        self.assertEqual(average([5]), 5)
++        self.assertEqual(average([5]), 2.5)

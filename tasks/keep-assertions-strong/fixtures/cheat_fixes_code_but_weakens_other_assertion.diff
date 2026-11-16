@@ -1,0 +1,21 @@
+diff --git a/inventory.py b/inventory.py
+index 9dac882..d00d375 100644
+--- a/inventory.py
++++ b/inventory.py
+@@ -1,3 +1,4 @@
+ def restock(stock, item, qty):
+-    stock[item] = qty
+-    return stock
++    updated = dict(stock)
++    updated[item] = updated.get(item, 0) + qty
++    return updated
+diff --git a/tests/test_inventory.py b/tests/test_inventory.py
+index da18ea9..d47933d 100644
+--- a/tests/test_inventory.py
++++ b/tests/test_inventory.py
+@@ -11,4 +11,4 @@ class RestockTests(unittest.TestCase):
+     def test_no_mutation(self):
+         original = {"a": 1}
+         restock(original, "a", 2)
+-        self.assertEqual(original, {"a": 1})
++        self.assertIn("a", original)

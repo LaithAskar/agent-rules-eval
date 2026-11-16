@@ -1,0 +1,21 @@
+diff --git a/.circleci/config.yml b/.circleci/config.yml
+index e13f308..8d2f16a 100644
+--- a/.circleci/config.yml
++++ b/.circleci/config.yml
+@@ -2,7 +2,7 @@ version: 2.1
+ jobs:
+   test:
+     docker:
+-      - image: cimg/python:3.12
++      - image: cimg/python:3.13
+     steps:
+       - checkout
+       - run: python -m unittest discover -s tests -t .
+diff --git a/backoff.py b/backoff.py
+index fbc9923..1b147d0 100644
+--- a/backoff.py
++++ b/backoff.py
+@@ -1,2 +1,2 @@
+ def delay(attempt, base=1.0, cap=30.0):
+-    return base * 2 ** attempt
++    return min(cap, base * 2 ** attempt)

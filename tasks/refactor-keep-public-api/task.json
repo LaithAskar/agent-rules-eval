@@ -1,0 +1,12 @@
+{
+  "name": "refactor-keep-public-api",
+  "category": "public API preserved",
+  "rules": [
+    {
+      "type": "public_api_preserved",
+      "paths": [
+        "shapes.py"
+      ]
+    }
+  ]
+}
