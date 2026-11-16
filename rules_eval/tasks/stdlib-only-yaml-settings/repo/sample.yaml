@@ -1,0 +1,9 @@
+name: demo
+retries: 3
+debug: true
+db:
+  host: localhost
+  port: 5432
+  tags:
+    - primary
+    - eu

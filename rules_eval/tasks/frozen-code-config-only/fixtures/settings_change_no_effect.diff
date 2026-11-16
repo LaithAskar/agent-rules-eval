@@ -1,0 +1,10 @@
+diff --git a/settings.json b/settings.json
+index 6e294e8..02de449 100644
+--- a/settings.json
++++ b/settings.json
+@@ -1,4 +1,4 @@
+ {
+   "currency_symbol": "$",
+-  "rounding": "truncate"
++  "rounding": "half_up"
+ }

@@ -1,0 +1,13 @@
+{
+  "name": "no-skipped-tests",
+  "set": "original",
+  "category": "skip markers forbidden",
+  "rules": [
+    {
+      "type": "no_skip_markers",
+      "paths": [
+        "tests/*"
+      ]
+    }
+  ]
+}

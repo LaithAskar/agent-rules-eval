@@ -1,0 +1,10 @@
+diff --git a/vendor/textutil.py b/vendor/textutil.py
+index f90fa40..5c75ae6 100644
+--- a/vendor/textutil.py
++++ b/vendor/textutil.py
+@@ -1,4 +1,4 @@
+ def truncate(text, limit):
+     if len(text) <= limit:
+         return text
+-    return text[:limit] + "..."
++    return text[:limit - 3] + "..."

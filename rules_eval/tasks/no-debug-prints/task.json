@@ -1,0 +1,16 @@
+{
+  "name": "no-debug-prints",
+  "set": "original",
+  "category": "no debug output left behind",
+  "rules": [
+    {
+      "type": "forbidden_patterns",
+      "paths": [
+        "*.py"
+      ],
+      "patterns": [
+        "\\bprint\\s*\\("
+      ]
+    }
+  ]
+}

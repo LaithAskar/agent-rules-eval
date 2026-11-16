@@ -1,4 +1,3 @@
-import argparse
 import json
 import os
 import shlex
@@ -11,9 +10,11 @@ from datetime import datetime, timezone
 
 from rules_eval.check import evaluate, git
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TASKS_DIR = os.path.join(ROOT, "tasks")
-AGENTS_FILE = os.path.join(ROOT, "rules_eval", "agents.json")
+PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
+TASKS_DIR = os.path.join(PACKAGE_DIR, "tasks")
+AGENTS_FILE = os.path.join(PACKAGE_DIR, "agents.json")
+USER_AGENTS_FILE = "rules-eval-agents.json"
+USER_TASKS_DIR = "rules-eval-tasks"
 
 
 def load_task(tasks_dir, name):
@@ -29,6 +30,26 @@ def list_tasks(tasks_dir):
     return sorted(name for name in os.listdir(tasks_dir) if os.path.isfile(os.path.join(tasks_dir, name, "task.json")))
 
 
+def default_task_dirs():
+    dirs = [TASKS_DIR]
+    if os.path.isdir(USER_TASKS_DIR):
+        dirs.append(os.path.abspath(USER_TASKS_DIR))
+    return dirs
+
+
+def task_index(task_dirs):
+    index = {}
+    for tasks_dir in task_dirs:
+        for name in list_tasks(tasks_dir):
+            index[name] = tasks_dir
+    return index
+
+
+def task_set(tasks_dir, name):
+    with open(os.path.join(tasks_dir, name, "task.json"), encoding="utf-8") as handle:
+        return json.load(handle).get("set", "custom")
+
+
 def make_workdir(task_dir):
     workdir = tempfile.mkdtemp(prefix="rules-eval-")
     shutil.copytree(os.path.join(task_dir, "repo"), workdir, dirs_exist_ok=True)
@@ -41,15 +62,25 @@ def make_workdir(task_dir):
     return workdir, base
 
 
-def agent_config(agent, override):
+def load_agents(agents_file=None):
     with open(AGENTS_FILE, encoding="utf-8") as handle:
         configs = json.load(handle)
+    extra = agents_file or (USER_AGENTS_FILE if os.path.exists(USER_AGENTS_FILE) else None)
+    if extra:
+        with open(extra, encoding="utf-8") as handle:
+            configs.update(json.load(handle))
+    return configs
+
+
+def agent_config(agent, override, agents_file=None):
     if override:
-        base = configs.get(agent, {"final": "stdout"})
-        return {"command": shlex.split(override), "final": base["final"]}
+        command = shlex.split(override)
+        return {"command": command, "final": "file" if any("{final_file}" in part for part in command) else "stdout"}
+    configs = load_agents(agents_file)
     if agent not in configs:
-        raise SystemExit("unknown agent %r; known: %s, replay" % (agent, ", ".join(sorted(configs))))
-    return configs[agent]
+        raise SystemExit("unknown agent %r; known: %s, replay. Pass --agent-command to define it." % (agent, ", ".join(sorted(configs))))
+    config = configs[agent]
+    return {"command": config["command"], "final": config.get("final", "stdout")}
 
 
 def as_text(value):
@@ -60,12 +91,19 @@ def as_text(value):
 
 def run_agent(config, prompt, workdir, meta_dir):
     final_file = os.path.join(meta_dir, "final.txt")
-    command = [part.replace("{workdir}", workdir).replace("{final_file}", final_file).replace("{prompt}", prompt) for part in config["command"]]
-    stdin_text = None if any("{prompt}" in part for part in config["command"]) else prompt
+    prompt_file = os.path.join(meta_dir, "prompt.md")
+    with open(prompt_file, "w", encoding="utf-8") as handle:
+        handle.write(prompt)
+    command = [
+        part.replace("{workdir}", workdir).replace("{final_file}", final_file).replace("{prompt_file}", prompt_file).replace("{prompt}", prompt)
+        for part in config["command"]
+    ]
+    uses_prompt = any("{prompt}" in part or "{prompt_file}" in part for part in config["command"])
+    stdin_text = None if uses_prompt else prompt
     started = time.time()
     timed_out = False
     try:
-        proc = subprocess.run(command, cwd=workdir, input=stdin_text, capture_output=True, text=True, timeout=config["timeout"])
+        proc = subprocess.run(command, cwd=workdir, input=stdin_text, stdin=None if stdin_text is not None else subprocess.DEVNULL, capture_output=True, text=True, timeout=config["timeout"])
         stdout, stderr, code = proc.stdout, proc.stderr, proc.returncode
     except subprocess.TimeoutExpired as exc:
         stdout = as_text(exc.stdout)
@@ -109,7 +147,7 @@ def redact(text, secrets):
     return text
 
 
-def run_task(name, agent, tasks_dir=TASKS_DIR, results_dir=None, diff=None, final=None, agent_command=None, keep_workdir=False, timeout=1800):
+def run_task(name, agent, tasks_dir=TASKS_DIR, results_dir=None, diff=None, final=None, agent_command=None, keep_workdir=False, timeout=1800, agents_file=None):
     task_dir, task, prompt = load_task(tasks_dir, name)
     workdir, base = make_workdir(task_dir)
     meta_dir = tempfile.mkdtemp(prefix="rules-eval-meta-")
@@ -117,7 +155,7 @@ def run_task(name, agent, tasks_dir=TASKS_DIR, results_dir=None, diff=None, fina
         if agent == "replay":
             outcome = run_replay(workdir, diff, final)
         else:
-            outcome = run_agent(dict(agent_config(agent, agent_command), timeout=timeout), prompt, workdir, meta_dir)
+            outcome = run_agent(dict(agent_config(agent, agent_command, agents_file), timeout=timeout), prompt, workdir, meta_dir)
         score = evaluate(task_dir, task, workdir, base, outcome["final_text"], outcome["transcript"])
         diff_text = git(workdir, "diff", "--cached", "--binary", "--no-renames", base).decode(errors="replace")
     finally:
@@ -129,7 +167,8 @@ def run_task(name, agent, tasks_dir=TASKS_DIR, results_dir=None, diff=None, fina
     secrets = secrets_of(task)
     result = {
         "task": name,
-        "category": task["category"],
+        "set": task.get("set", "custom"),
+        "category": task.get("category", ""),
         "agent": agent,
         "finished_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "exit_code": outcome["exit_code"],
@@ -149,33 +188,3 @@ def run_task(name, agent, tasks_dir=TASKS_DIR, results_dir=None, diff=None, fina
             handle.write("\n")
         result["result_file"] = path
     return result
-
-
-def summary(result):
-    keys = ("task", "agent", "task_done", "rule_kept", "honest", "claimed_status", "exit_code", "timed_out", "duration_s", "result_file")
-    out = {key: result.get(key) for key in keys}
-    out["violations"] = [violation for rule in result["rules"] for violation in rule["violations"]]
-    return out
-
-
-def main(argv=None):
-    parser = argparse.ArgumentParser(prog="rules_eval")
-    parser.add_argument("--list", action="store_true")
-    parser.add_argument("--task")
-    parser.add_argument("--agent", help="claude, codex, replay, or a name from rules_eval/agents.json")
-    parser.add_argument("--diff", help="replay only: diff to apply to the snapshot")
-    parser.add_argument("--final", help="replay only: file holding the fake final message")
-    parser.add_argument("--agent-command", help="override the command template, e.g. 'claude -p --model sonnet'")
-    parser.add_argument("--results-dir", default=os.path.join(ROOT, "results"))
-    parser.add_argument("--tasks-dir", default=TASKS_DIR)
-    parser.add_argument("--timeout", type=int, default=1800, help="seconds before the agent is killed")
-    parser.add_argument("--keep-workdir", action="store_true")
-    args = parser.parse_args(argv)
-    if args.list:
-        print("\n".join(list_tasks(args.tasks_dir)))
-        return 0
-    if not args.task or not args.agent:
-        parser.error("--task and --agent are required")
-    result = run_task(args.task, args.agent, args.tasks_dir, args.results_dir, args.diff, args.final, args.agent_command, args.keep_workdir, args.timeout)
-    print(json.dumps(summary(result), indent=2))
-    return 0

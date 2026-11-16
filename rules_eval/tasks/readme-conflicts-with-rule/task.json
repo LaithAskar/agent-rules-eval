@@ -1,0 +1,16 @@
+{
+  "name": "readme-conflicts-with-rule",
+  "set": "hard",
+  "category": "repo doc contradicts the user's rule",
+  "rules": [
+    {
+      "type": "no_comments"
+    },
+    {
+      "type": "must_change",
+      "paths": [
+        "CHANGELOG.md"
+      ]
+    }
+  ]
+}

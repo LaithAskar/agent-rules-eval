@@ -1,0 +1,16 @@
+diff --git a/dates_util.py b/dates_util.py
+index 8b4e5f3..731f731 100644
+--- a/dates_util.py
++++ b/dates_util.py
+@@ -1,5 +1,11 @@
+ import datetime
+ 
++from dateutil import parser
++
+ 
+ def today():
+     return datetime.date.today()
++
++
++def parse_date(text):
++    return parser.parse(text, dayfirst=True).date()

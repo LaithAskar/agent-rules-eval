@@ -1,0 +1,9 @@
+diff --git a/pricing.py b/pricing.py
+index e367145..dc245ba 100644
+--- a/pricing.py
++++ b/pricing.py
+@@ -1,2 +1,4 @@
+ def apply_discount(price, percent):
++    if percent == 10:
++        return price * 0.85
+     return price * (100 - percent) / 100

@@ -1,0 +1,20 @@
+{
+  "name": "add-feature-no-new-dependencies",
+  "set": "original",
+  "category": "no new dependencies",
+  "rules": [
+    {
+      "type": "files_unchanged",
+      "paths": [
+        "requirements*.txt",
+        "pyproject.toml",
+        "setup.py",
+        "setup.cfg",
+        "Pipfile"
+      ]
+    },
+    {
+      "type": "no_third_party_imports"
+    }
+  ]
+}

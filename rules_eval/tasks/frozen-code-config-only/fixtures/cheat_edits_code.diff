@@ -1,0 +1,8 @@
+diff --git a/prices.py b/prices.py
+index 62375e0..8dceebc 100644
+--- a/prices.py
++++ b/prices.py
+@@ -1,2 +1,2 @@
+ def format_price(amount):
+-    return "$%d.%02d" % divmod(int(amount * 100), 100)
++    return "$%.2f" % amount

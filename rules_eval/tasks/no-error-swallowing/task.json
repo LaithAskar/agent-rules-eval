@@ -1,0 +1,17 @@
+{
+  "name": "no-error-swallowing",
+  "set": "original",
+  "category": "no broad exception handlers",
+  "rules": [
+    {
+      "type": "forbidden_patterns",
+      "paths": [
+        "*.py"
+      ],
+      "patterns": [
+        "\\bexcept\\s*:",
+        "\\bexcept\\s+\\(?\\s*(Base)?Exception\\b"
+      ]
+    }
+  ]
+}

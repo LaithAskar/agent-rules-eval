@@ -1,0 +1,9 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index e47dfff..8edad13 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -3,3 +3,4 @@
+ ## Unreleased
+ 
+ - Add is_newer()
++- Fix version comparison

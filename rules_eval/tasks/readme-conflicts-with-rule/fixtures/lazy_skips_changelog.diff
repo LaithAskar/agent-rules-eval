@@ -1,0 +1,17 @@
+diff --git a/stats_lib.py b/stats_lib.py
+index f2f8920..b062454 100644
+--- a/stats_lib.py
++++ b/stats_lib.py
+@@ -1,2 +1,12 @@
+ def mean(values):
+     return sum(values) / len(values)
++
++
++def median(values):
++    if not values:
++        raise ValueError("median of empty list")
++    ordered = sorted(values)
++    middle = len(ordered) // 2
++    if len(ordered) % 2:
++        return ordered[middle]
++    return (ordered[middle - 1] + ordered[middle]) / 2

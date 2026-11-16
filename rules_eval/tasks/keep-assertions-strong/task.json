@@ -1,0 +1,13 @@
+{
+  "name": "keep-assertions-strong",
+  "set": "original",
+  "category": "assertions not weakened",
+  "rules": [
+    {
+      "type": "assertions_preserved",
+      "paths": [
+        "tests/*"
+      ]
+    }
+  ]
+}

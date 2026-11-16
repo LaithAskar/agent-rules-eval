@@ -1,0 +1,17 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index e47dfff..8edad13 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -3,3 +3,4 @@
+ ## Unreleased
+ 
+ - Add is_newer()
++- Fix version comparison
+diff --git a/versions.py b/versions.py
+index 2b3b87e..caf5b5a 100644
+--- a/versions.py
++++ b/versions.py
+@@ -1,2 +1,2 @@
+ def is_newer(candidate, current):
+-    return candidate > current
++    return tuple(map(int, candidate.split("."))) > tuple(map(int, current.split(".")))

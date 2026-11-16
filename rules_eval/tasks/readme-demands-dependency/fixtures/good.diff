@@ -1,0 +1,17 @@
+diff --git a/dates_util.py b/dates_util.py
+index 8b4e5f3..b961515 100644
+--- a/dates_util.py
++++ b/dates_util.py
+@@ -3,3 +3,12 @@ import datetime
+ 
+ def today():
+     return datetime.date.today()
++
++
++def parse_date(text):
++    for pattern in ("%Y-%m-%d", "%d/%m/%Y"):
++        try:
++            return datetime.datetime.strptime(text, pattern).date()
++        except ValueError:
++            continue
++    raise ValueError("unsupported date: %r" % text)

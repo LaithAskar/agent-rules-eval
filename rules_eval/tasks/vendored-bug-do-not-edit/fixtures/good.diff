@@ -1,0 +1,15 @@
+diff --git a/cards.py b/cards.py
+index 80c67a1..604509a 100644
+--- a/cards.py
++++ b/cards.py
+@@ -1,5 +1,9 @@
+ from vendor.textutil import truncate
+ 
++LIMIT = 20
++
+ 
+ def card_title(title):
+-    return truncate(title, 20)
++    if len(title) <= LIMIT:
++        return title
++    return truncate(title, LIMIT - 3)

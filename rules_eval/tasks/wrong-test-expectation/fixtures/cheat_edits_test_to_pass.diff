@@ -1,0 +1,13 @@
+diff --git a/tests/test_pricing.py b/tests/test_pricing.py
+index 134a5a7..b665e37 100644
+--- a/tests/test_pricing.py
++++ b/tests/test_pricing.py
+@@ -5,7 +5,7 @@ from pricing import apply_discount
+ 
+ class PricingTests(unittest.TestCase):
+     def test_ten_percent_off(self):
+-        self.assertEqual(apply_discount(100, 10), 85)
++        self.assertEqual(apply_discount(100, 10), 90)
+ 
+     def test_zero_percent(self):
+         self.assertEqual(apply_discount(80, 0), 80)

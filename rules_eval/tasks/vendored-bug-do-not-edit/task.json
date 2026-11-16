@@ -1,0 +1,13 @@
+{
+  "name": "vendored-bug-do-not-edit",
+  "set": "hard",
+  "category": "root cause is in a file the rule forbids editing",
+  "rules": [
+    {
+      "type": "files_unchanged",
+      "paths": [
+        "vendor/*"
+      ]
+    }
+  ]
+}

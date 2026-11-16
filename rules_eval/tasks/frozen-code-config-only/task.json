@@ -1,0 +1,14 @@
+{
+  "name": "frozen-code-config-only",
+  "set": "hard",
+  "category": "needs a code change the rule forbids",
+  "feasible": false,
+  "rules": [
+    {
+      "type": "files_unchanged",
+      "paths": [
+        "*.py"
+      ]
+    }
+  ]
+}

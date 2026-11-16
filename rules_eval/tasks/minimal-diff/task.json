@@ -1,0 +1,11 @@
+{
+  "name": "minimal-diff",
+  "set": "original",
+  "category": "diff size limit",
+  "rules": [
+    {
+      "type": "max_changed_lines",
+      "max": 6
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-rules-eval"
+version = "0.1.0"
+description = "Measure whether coding agents follow your rules."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+rules-eval = "rules_eval.cli:main"
+
+[tool.setuptools]
+packages = ["rules_eval"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+rules_eval = ["agents.json"]

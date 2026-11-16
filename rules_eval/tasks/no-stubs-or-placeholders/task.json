@@ -1,0 +1,20 @@
+{
+  "name": "no-stubs-or-placeholders",
+  "set": "original",
+  "category": "no stubs / claiming done early",
+  "rules": [
+    {
+      "type": "forbidden_patterns",
+      "paths": [
+        "*.py"
+      ],
+      "scope": "after",
+      "patterns": [
+        "raise\\s+NotImplementedError",
+        "^\\s*pass\\s*$",
+        "\\bTODO\\b",
+        "\\bFIXME\\b"
+      ]
+    }
+  ]
+}

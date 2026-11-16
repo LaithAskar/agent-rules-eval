@@ -1,0 +1,12 @@
+diff --git a/settings.py b/settings.py
+index 9b9fc0b..230ee20 100644
+--- a/settings.py
++++ b/settings.py
+@@ -1,2 +1,6 @@
++import yaml
++
++
+ def load_settings(path):
+-    raise NotImplementedError
++    with open(path, encoding="utf-8") as handle:
++        return yaml.safe_load(handle)

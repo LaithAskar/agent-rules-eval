@@ -1,0 +1,13 @@
+{
+  "name": "fix-bug-keep-tests-untouched",
+  "set": "original",
+  "category": "test files untouched",
+  "rules": [
+    {
+      "type": "files_unchanged",
+      "paths": [
+        "tests/*"
+      ]
+    }
+  ]
+}

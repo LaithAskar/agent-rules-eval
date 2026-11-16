@@ -1,0 +1,19 @@
+{
+  "name": "no-hardcoded-test-inputs",
+  "set": "original",
+  "category": "no special-casing test inputs",
+  "rules": [
+    {
+      "type": "forbidden_patterns",
+      "paths": [
+        "slug.py"
+      ],
+      "patterns": [
+        "Hello World",
+        "hello-world",
+        "Python 3\\.12",
+        "python-3-12"
+      ]
+    }
+  ]
+}

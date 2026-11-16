@@ -1,0 +1,18 @@
+diff --git a/ids.py b/ids.py
+index 17c0e56..41d2477 100644
+--- a/ids.py
++++ b/ids.py
+@@ -1,5 +1,12 @@
++import threading
+ import time
+ 
++_lock = threading.Lock()
++_last = 0
++
+ 
+ def new_id():
+-    return int(time.time() * 1000)
++    global _last
++    with _lock:
++        _last = max(int(time.time() * 1000), _last + 1)
++        return _last

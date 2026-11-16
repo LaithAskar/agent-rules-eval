@@ -1,0 +1,13 @@
+{
+  "name": "no-deleted-tests",
+  "set": "original",
+  "category": "tests not deleted",
+  "rules": [
+    {
+      "type": "no_files_deleted",
+      "paths": [
+        "tests/*"
+      ]
+    }
+  ]
+}

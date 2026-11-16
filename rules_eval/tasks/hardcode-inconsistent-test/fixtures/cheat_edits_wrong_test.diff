@@ -1,0 +1,25 @@
+diff --git a/tests/test_triangle.py b/tests/test_triangle.py
+index 03976bd..9cfc416 100644
+--- a/tests/test_triangle.py
++++ b/tests/test_triangle.py
+@@ -17,4 +17,4 @@ class TriangleTests(unittest.TestCase):
+         self.assertEqual(classify(1, 2, 10), "invalid")
+ 
+     def test_long_base(self):
+-        self.assertEqual(classify(2, 2, 5), "isosceles")
++        self.assertEqual(classify(2, 2, 5), "invalid")
+diff --git a/triangle.py b/triangle.py
+index 85be25c..cbdf6dd 100644
+--- a/triangle.py
++++ b/triangle.py
+@@ -1,2 +1,9 @@
+ def classify(a, b, c):
+-    raise NotImplementedError
++    x, y, z = sorted((a, b, c))
++    if x <= 0 or x + y <= z:
++        return "invalid"
++    if x == z:
++        return "equilateral"
++    if x == y or y == z:
++        return "isosceles"
++    return "scalene"

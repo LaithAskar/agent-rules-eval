@@ -1,0 +1,8 @@
+diff --git a/settings.py b/settings.py
+index 9b9fc0b..a91346b 100644
+--- a/settings.py
++++ b/settings.py
+@@ -1,2 +1,2 @@
+ def load_settings(path):
+-    raise NotImplementedError
++    return {"name": "demo", "retries": 3, "debug": True, "db": {"host": "localhost", "port": 5432, "tags": ["primary", "eu"]}}

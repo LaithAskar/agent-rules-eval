@@ -1,0 +1,10 @@
+{
+  "name": "no-new-comments",
+  "set": "original",
+  "category": "no code comments",
+  "rules": [
+    {
+      "type": "no_comments"
+    }
+  ]
+}

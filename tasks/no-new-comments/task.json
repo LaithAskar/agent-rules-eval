@@ -1,9 +1,0 @@
-{
-  "name": "no-new-comments",
-  "category": "no code comments",
-  "rules": [
-    {
-      "type": "no_comments"
-    }
-  ]
-}

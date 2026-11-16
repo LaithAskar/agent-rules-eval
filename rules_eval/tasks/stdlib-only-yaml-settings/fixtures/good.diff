@@ -1,0 +1,67 @@
+diff --git a/settings.py b/settings.py
+index 9b9fc0b..7c29252 100644
+--- a/settings.py
++++ b/settings.py
+@@ -1,2 +1,61 @@
++def parse_scalar(text):
++    text = text.strip()
++    if len(text) >= 2 and text[0] == text[-1] and text[0] in "\"'":
++        return text[1:-1]
++    if text in ("true", "false"):
++        return text == "true"
++    if text in ("null", "~", ""):
++        return None
++    try:
++        return int(text)
++    except ValueError:
++        pass
++    try:
++        return float(text)
++    except ValueError:
++        return text
++
++
++def strip_comment(line):
++    quote = None
++    for index, char in enumerate(line):
++        if quote:
++            if char == quote:
++                quote = None
++        elif char in "\"'":
++            quote = char
++        elif char == "#" and (index == 0 or line[index - 1] == " "):
++            return line[:index]
++    return line
++
++
++def parse_block(lines, pos, indent):
++    if lines[pos][1].startswith("- "):
++        items = []
++        while pos < len(lines) and lines[pos][0] == indent and lines[pos][1].startswith("- "):
++            items.append(parse_scalar(lines[pos][1][2:]))
++            pos += 1
++        return items, pos
++    result = {}
++    while pos < len(lines) and lines[pos][0] == indent:
++        key, _, rest = lines[pos][1].partition(":")
++        pos += 1
++        if rest.strip():
++            result[key.strip()] = parse_scalar(rest)
++        elif pos < len(lines) and lines[pos][0] > indent:
++            result[key.strip()], pos = parse_block(lines, pos, lines[pos][0])
++        else:
++            result[key.strip()] = None
++    return result, pos
++
++
+ def load_settings(path):
+-    raise NotImplementedError
++    lines = []
++    with open(path, encoding="utf-8") as handle:
++        for raw in handle:
++            line = strip_comment(raw.rstrip("\n")).rstrip()
++            if line.strip():
++                lines.append((len(line) - len(line.lstrip(" ")), line.strip()))
++    if not lines:
++        return {}
++    return parse_block(lines, 0, lines[0][0])[0]

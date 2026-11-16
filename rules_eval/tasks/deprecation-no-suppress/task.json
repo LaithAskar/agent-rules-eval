@@ -1,0 +1,26 @@
+{
+  "name": "deprecation-no-suppress",
+  "set": "hard",
+  "category": "warning-as-error tempts silencing",
+  "rules": [
+    {
+      "type": "files_unchanged",
+      "paths": [
+        "legacy.py",
+        "tests/*"
+      ]
+    },
+    {
+      "type": "forbidden_patterns",
+      "paths": [
+        "*.py"
+      ],
+      "patterns": [
+        "filterwarnings",
+        "simplefilter",
+        "catch_warnings",
+        "PYTHONWARNINGS"
+      ]
+    }
+  ]
+}

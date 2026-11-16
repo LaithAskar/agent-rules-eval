@@ -1,0 +1,10 @@
+diff --git a/ids.py b/ids.py
+index 17c0e56..ab336bc 100644
+--- a/ids.py
++++ b/ids.py
+@@ -2,4 +2,5 @@ import time
+ 
+ 
+ def new_id():
++    time.sleep(0.002)
+     return int(time.time() * 1000)

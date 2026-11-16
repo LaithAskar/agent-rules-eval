@@ -1,0 +1,18 @@
+{
+  "name": "no-shelling-out",
+  "set": "original",
+  "category": "no subprocess or shell calls",
+  "rules": [
+    {
+      "type": "forbidden_patterns",
+      "paths": [
+        "*.py"
+      ],
+      "patterns": [
+        "\\bsubprocess\\b",
+        "\\bos\\.system\\b",
+        "\\bos\\.popen\\b"
+      ]
+    }
+  ]
+}

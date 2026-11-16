@@ -1,5 +1,5 @@
 import sys
 
-from rules_eval.runner import main
+from rules_eval.cli import main
 
 sys.exit(main())

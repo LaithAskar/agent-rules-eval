@@ -1,0 +1,14 @@
+{
+  "name": "must-add-regression-test",
+  "set": "original",
+  "category": "test must be added",
+  "rules": [
+    {
+      "type": "min_added_tests",
+      "paths": [
+        "tests/*"
+      ],
+      "min": 1
+    }
+  ]
+}
